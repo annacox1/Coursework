@@ -29,7 +29,7 @@ public class User {
                 if (password.equals(correctPassword)) {
                     String token = UUID.randomUUID().toString();
                     PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Username = ?");
-                    ps2.setString(1, token);
+                    ps2.setString(5, token);
                     ps2.setString(2, username);
                     ps2.executeUpdate();
                     JSONObject userDetails = new JSONObject();
@@ -53,7 +53,7 @@ public class User {
         // token is taken from the Cookie sent back automatically with every HTTP request
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
-            ps.setString(1, token);
+            ps.setString(5, token);
             ResultSet logoutResults = ps.executeQuery();
             return logoutResults.next();   //logoutResults.next() will be true if there is a record in the ResultSet
         } catch (Exception exception) {

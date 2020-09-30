@@ -23,7 +23,7 @@
                 } else {
                     Cookies.set("token", response.token);
                     Cookies.set("username", response.username);
-                    window.open("reviews.html", "_self");       //open reviews.html in same tab
+                    window.open("Home.html", "_self");       //open reviews.html in same tab
                 }
             });
         }
@@ -33,9 +33,15 @@
 <body>
 <h1>Login</h1>
 <form id="loginForm">
+    <p>Username:</p>
     <input type="text" name="username" id="username">
+    <BR>
+    <BR<
+    <p>Password:</p>
     <input type="password" name="password" id="password">
 </form>
+<BR>
+<BR>
 <button class="button" onclick='postUserLogin();'>LOGIN</button>
 
 </body>
