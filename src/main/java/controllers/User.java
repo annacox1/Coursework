@@ -14,7 +14,7 @@ import java.util.UUID;
 @Path("user/")
 public class User {
 
-}
+
     @POST
     @Path("login")
     public String loginUser(@FormDataParam("username") String username, @FormDataParam("password") String password) {
@@ -27,9 +27,9 @@ public class User {
                 String correctPassword = loginResults.getString(1);
                 if (password.equals(correctPassword)) {
                     String token = UUID.randomUUID().toString();
-                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Username = ?");
-                    ps2.setString(5, token);
-                    ps2.setString(2, username);
+                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET UUID = ? WHERE Username = ?");  //changed Token to UUID which is the name of the field in your database
+                    ps2.setString(1, token);  // 1 here means the value at the first ? in prepared statement above
+                    ps2.setString(2, username);  // 2 here means the value at the second ? in ps above
                     ps2.executeUpdate();
                     JSONObject userDetails = new JSONObject();
                     userDetails.put("username", username);
@@ -48,11 +48,11 @@ public class User {
     }
 
 
-    public static boolean validToken(String token) {		// this method MUST be called before any data is returned to the browser
+    public static boolean validToken(String token) {        // this method MUST be called before any data is returned to the browser
         // token is taken from the Cookie sent back automatically with every HTTP request
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
-            ps.setString(5, token);
+            ps.setString(1, token);
             ResultSet logoutResults = ps.executeQuery();
             return logoutResults.next();   //logoutResults.next() will be true if there is a record in the ResultSet
         } catch (Exception exception) {
@@ -60,3 +60,5 @@ public class User {
             return false;
         }
     }
+
+}
