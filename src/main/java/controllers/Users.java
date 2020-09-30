@@ -14,6 +14,8 @@ import java.util.UUID;
 @Path("user/")
 public class User {
 
+}
+
     @POST
     @Path("login")
     public String loginUser(@FormDataParam("username") String username, @FormDataParam("password") String password) {
