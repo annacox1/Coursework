@@ -21,6 +21,7 @@ public class Entries {
     public String entryList() {
         System.out.println("Invoked Entry.entryList()");
         JSONArray response = new JSONArray();
+
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT EntryID, Title, Date, Content, CategoryID FROM Entries");
             ResultSet results = ps.executeQuery();
