@@ -4,6 +4,30 @@
 <head>
 
     <style>
+        .vertical-menu {
+            width: 200px;
+            align-content: left;
+            float: left;
+            padding: 15px;
+            font-family : Arial, sans-serif, verdana ;
+        }
+
+        .vertical-menu a {
+            background-color: #eee;
+            color: black;
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+        }
+
+        .vertical-menu a:hover {
+            background-color: #ccc;
+        }
+
+        .vertical-menu a.active {
+            background-color: mediumpurple;
+            color: white;
+        }
         table {
             border-collapse: collapse;
             border: 1px solid black;
@@ -12,6 +36,7 @@
 
         h1{
             font-family : Arial, sans-serif, verdana ;
+            align-content: center;
         }
 
         body{
@@ -19,7 +44,7 @@
         }
 
         table{
-            background-color: #c3f0f7;
+            background-color: white;
             border-spacing: 5px;
         }
 
@@ -28,7 +53,10 @@
         }
 
         td {
-            padding: 15px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+        th {
             border: 1px solid black;
         }
 
@@ -37,11 +65,22 @@
     </style>
 
     <title>Odyssey Journal</title>
+    <div class="vertical-menu">
+        <a href="#" class="active">Events</a>
+        <a href="#">Calendar</a>
+        <a href="#">Maps</a>
+    </div>
 
     <script>
         "use strict";
 
         function getEntryList() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
             console.log("Invoked getEntryList()");
 
             const url = "/entry/list";
@@ -57,18 +96,17 @@
             }
         });
         }
-        function formatEntryList(){
+        function formatEntryList(myJSON){
+            let dataHTML = "<th> Title</th><th> Date</th><th> Content</th>";
+
+            for (let item of myJSON) {
+
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td></tr>";
+            }
+            document.getElementById("eventTable").innerHTML += dataHTML;
+
 
         }
-
-
-
-
-
-
-
-
-
 
     </script>
 
@@ -76,21 +114,23 @@
 </head>
 
 <body>
-
-
-
 <h1>Welcome to Odyssey Journal</h1>
-
-<button onclick='getEntryList();'>RUN MY FUNCTION</button>
+<hr>
+<div id="myDIV">
+<BR>
+<button onclick='getEntryList();'>Display Events</button>
+</div>
+<BR>
+<BR>
 
 
 <div id="name"></div>
 
 <div id="demo"></div>
 
-<table id="eventTable"></table>
+<table id="eventTable">
 
-
+</table>
 
 
 </body>
