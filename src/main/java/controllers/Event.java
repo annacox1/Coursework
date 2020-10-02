@@ -23,16 +23,14 @@ public class Event {
         JSONArray response = new JSONArray();
 
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT EventId, CategoryId, Title, Description, Location, Date FROM Events");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT EventId, Title, Date, Description, Location, CategoryID FROM Events");
             ResultSet results = ps.executeQuery();
-            while (results.next() == true) {
+            while (results.next()==true) {
                 JSONObject row = new JSONObject();
-                row.put("EventId", results.getInt(1));
-                row.put("CategoryId", results.getInt(0));
-                row.put("Title", results.getString(3));
-                row.put("Description", results.getString(4));
-                row.put("Location", results.getString(5));
-                row.put("Date", results.getString(6));
+                row.put("Title", results.getString(2));
+                row.put("Description", results.getString(3));
+                row.put("Location", results.getString(4));
+                row.put("Date", results.getString(5));
                 response.add(row);
             }
             return response.toString();
@@ -41,4 +39,9 @@ public class Event {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
+
+
+
+
+
 }
