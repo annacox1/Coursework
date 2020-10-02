@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang='en'>
 
 <head>
@@ -15,7 +15,7 @@
         }
 
         body{
-            background-color: #e3bbf0;
+            background-color: #f5e0ff;
         }
 
         table{
@@ -44,7 +44,7 @@
         function getEntryList() {
             console.log("Invoked getEntryList()");
 
-            const url = "src\\main\\java\\controllers\\Entries.java";
+            const url = "/entry/list";
             fetch(url, {
                 method: "GET",
             }).then(response => {
@@ -56,6 +56,9 @@
                 formatEntryList(response);
             }
         });
+        }
+        function formatEntryList(){
+
         }
 
 
@@ -85,7 +88,7 @@
 
 <div id="demo"></div>
 
-<table id="entryTable"></table>
+<table id="eventTable"></table>
 
 
 
