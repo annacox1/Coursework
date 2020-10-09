@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 @Produces(MediaType.APPLICATION_JSON)
 
 
-public class Entries {
+public class Entry {
     @GET
     @Path("list")
     public String entryList() {
@@ -46,10 +46,10 @@ public class Entries {
         try {
             System.out.println("Invoked Entry.updateEntry/update id=" + entryID);
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Entry SET Title = ?, Date = ? , Content = ?, CategoryID = ? WHERE FoodID = ?");
-            ps.setString(1, title);
-            ps.setInt(2, date);
-            ps.setInt(3, entryID);
-            ps.setInt(4, content);
+            ps.setString(2, title);
+            ps.setInt(4, date);
+            ps.setInt(1, entryID);
+            ps.setInt(5, content);
             ps.execute();
             return "{\"OK\": \"Entry updated\"}";
         } catch (Exception exception) {

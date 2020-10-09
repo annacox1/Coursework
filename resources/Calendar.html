@@ -1,36 +1,32 @@
 
-<html lang='en'>
-
+<html>
 <head>
     <link rel="stylesheet" href="style.css">
-
-
-
-    <title>Odyssey Journal</title>
     <div class="vertical-menu">
-        <a href="#" class="active">Entries</a>
-        <a href="Calendar.html">Calendar</a>
+        <a href="Home.html" >Entries</a>
+        <a href="Calendar.html"class="active">Calendar</a>
         <a href="Maps.html">Maps</a>
     </div>
 
+    <title>Calendar</title>
     <script>
         "use strict";
 
-        function getEntryList() {
+        function getEventList() {
             var x = document.getElementById("myDIV");
             if (x.style.display === "none") {
                 x.style.display = "block";
             } else {
                 x.style.display = "none";
             }
-            console.log("Invoked getEntryList()");
+            console.log("Invoked getEventList()");
 
-            const url = "/entry/list";
+            const url = "/event/list";
             fetch(url, {
                 method: "GET",
             }).then(response => {
                 return response.json();
-            }).then(response => {
+        }).then(response => {
                 if (response.hasOwnProperty("Error")) {
                 alert(JSON.stringify(response));
             } else {
@@ -39,13 +35,13 @@
         });
         }
         function formatEntryList(myJSON){
-            let dataHTML = "<th> Title</th><th> Date</th><th> Content</th>";
+            let dataHTML = "<th> Title</th><th> Date</th><th> Description</th><th> Location</th>";
 
             for (let item of myJSON) {
 
-                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td></tr>";
+                dataHTML += "<tr><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Description + "</td><td>+item.Location+</td></tr>";
             }
-            document.getElementById("entryTable").innerHTML += dataHTML;
+            document.getElementById("eventTable").innerHTML += dataHTML;
 
 
         }
@@ -54,26 +50,18 @@
 
 
 </head>
-
 <body>
-<h1>Welcome to Odyssey Journal</h1>
+
+<h1>Calendar</h1>
 <hr>
 <div id="myDIV">
-<BR>
-<button onclick='getEntryList();'>Display Entries</button>
+    <BR>
+    <button onclick='getEventList();'>Display Events</button>
 </div>
 <BR>
 <BR>
-
-
-<div id="name"></div>
-
-<div id="demo"></div>
-<table id="entryTable">
+<table id="eventTable">
 
 </table>
-
-
 </body>
-
 </html>
