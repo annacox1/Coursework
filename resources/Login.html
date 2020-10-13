@@ -29,7 +29,7 @@
                 if (response.hasOwnProperty("Error")) {
                     alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
                 } else {
-                    Cookies.set("sessionToken", response.sessionToken);
+                    Cookies.set("token", response.token);
                     window.open("Home.html", "_self");       //open reviews.html in same tab
                 }
             });

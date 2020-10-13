@@ -28,7 +28,7 @@ public class User {
                 String correctPassword = loginResults.getString(1);
                 if (password.equals(correctPassword)) {
                     String token = UUID.randomUUID().toString();
-                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET UUID = ? WHERE Username = ?");  //changed Token to UUID which is the name of the field in your database
+                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Username = ?");  //changed Token to UUID which is the name of the field in your database
                     ps2.setString(1, token);  // 1 here means the value at the first ? in prepared statement above
                     ps2.setString(2, username);  // 2 here means the value at the second ? in ps above
                     ps2.executeUpdate();
