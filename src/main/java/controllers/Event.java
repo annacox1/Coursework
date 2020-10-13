@@ -27,11 +27,17 @@ public class Event {
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
+//                row.put("EntryID", results.getString(1));  // 1 means first column returned from SQL query
+//                row.put("Title", results.getString(2));    // 2 means second column returned from SQL query
+//                row.put("Description", results.getString(3));  //3 means third column which is date but you're putting as descriptoin
+//                row.put("Location", results.getString(4));
+//                row.put("Date", results.getString(5));
                 row.put("EntryID", results.getString(1));
                 row.put("Title", results.getString(2));
-                row.put("Description", results.getString(3));
-                row.put("Location", results.getString(4));
-                row.put("Date", results.getString(5));
+                row.put("Date", results.getString(3));
+                row.put("Description", results.getString(4));
+                row.put("Location", results.getString(5));
+                row.put("CategoryID", results.getInt(6));   //you might want to show category name rather than ID, if so use a JOIN in SQL query above
                 response.add(row);
             }
             return response.toString();

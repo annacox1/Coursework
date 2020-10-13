@@ -9,6 +9,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/* ------------------------------------------------------------------------------
+ This class serves up the static HTML, CSS, JavaScript and images to the client.
+ You shouldn't need to change anything unless you are adding other file types.
+ ------------------------------------------------------------------------------ */
 @Path("client/")
 public class Client {
 
@@ -27,6 +31,13 @@ public class Client {
     }
 
     @GET
+    @Path("lib/{path}")
+    @Produces({"text/javascript"})
+    public byte[] getJavaScriptLibraryFile(@PathParam("path") String path) {
+        return getFile("client/lib/" + path);
+    }
+
+    @GET
     @Path("css/{path}")
     @Produces({"text/css"})
     public byte[] getCSSFile(@PathParam("path") String path) {
@@ -37,11 +48,19 @@ public class Client {
     @Path("{path}")
     @Produces({"text/html"})
     public byte[] getIHTMLFile(@PathParam("path") String path) {
-        return getFile(path);
+        return getFile("client/" + path);
     }
 
-    private byte[] getFile(String filename) {
+    @GET
+    @Path("favicon.ico")
+    @Produces({"image/x-icon"})
+    public byte[] getFavicon() {
+        return getFile("client/favicon.ico");
+    }
+
+    private static byte[] getFile(String filename) {
         try {
+
             File file = new File("resources/" + filename);
             byte[] fileData = new byte[(int) file.length()];
             DataInputStream dis = new DataInputStream(new FileInputStream(file));
@@ -50,7 +69,7 @@ public class Client {
             System.out.println("Sending: " + filename);
             return fileData;
         } catch (IOException ioe) {
-                 System.out.println("File IO error: " + ioe.getMessage());
+            System.out.println("File IO error: " + ioe.getMessage());
         }
         return null;
     }

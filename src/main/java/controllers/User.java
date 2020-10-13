@@ -49,35 +49,20 @@ public class User {
     }
 
 
-    public static boolean validToken(String token) {        // this method MUST be called before any data is returned to the browser
-        // token is taken from the Cookie sent back automatically with every HTTP request
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
-            ps.setString(1, token);
-            ResultSet logoutResults = ps.executeQuery();
-            return logoutResults.next();   //logoutResults.next() will be true if there is a record in the ResultSet
-        } catch (Exception exception) {
-            System.out.println("Database error" + exception.getMessage());
-            return false;
-        }
-    }
-    public static int validateSessionCookie(Cookie sessionCookie) {     //returns the userID that of the record with the cookie value
+    public static int validateToken(Cookie cookie) {     //returns the userID that of the record with the cookie value
 
-        String uuid = sessionCookie.getValue();
-        System.out.println("Invoked User.validateSessionCookie(), cookie value " + uuid);
+        String token = cookie.getValue();
+        System.out.println("Invoked User.validateToken(), value " + token);
 
         try {
-            PreparedStatement statement = Main.db.prepareStatement(
-                    "SELECT UserID FROM Users WHERE UUID = ?"
-            );
-            statement.setString(4, uuid);
+            PreparedStatement statement = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
+            statement.setString(1, token);
             ResultSet resultSet = statement.executeQuery();
             System.out.println("userID is " + resultSet.getInt("UserID"));
             return resultSet.getInt("UserID");  //Retrieve by column name  (should really test we only get one result back!)
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return -1;
-
         }
     }
 

@@ -20,9 +20,9 @@ import java.sql.ResultSet;
 public class Entry {
     @GET
     @Path("list")
-    public String entryList(@CookieParam("token") Cookie sessionCookie) {
+    public String entryList(@CookieParam("token") Cookie cookie) {
         System.out.println("Invoked Entry.entryList()");
-        int userID = User.validateSessionCookie(sessionCookie);
+        int userID = User.validateToken(cookie);
         if (userID == -1) {
             return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
         }
@@ -35,8 +35,8 @@ public class Entry {
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
-                row.put("EntryID", results.getInt(1));
-                row.put("Title", results.getString(2));
+                row.put("EntryID", results.getInt(1));   // 1 means the first column returned from the SQL query
+                row.put("Title", results.getString(2));  //  2 means the second columns returned from the SQL query
                 row.put("Date", results.getString(3));
                 row.put("Content", results.getString(4));
                 row.put("CategoryID", results.getInt(5));
