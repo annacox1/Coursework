@@ -4,6 +4,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
 import server.Main;
 
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -58,6 +59,25 @@ public class User {
         } catch (Exception exception) {
             System.out.println("Database error" + exception.getMessage());
             return false;
+        }
+    }
+    public static int validateSessionCookie(Cookie sessionCookie) {     //returns the userID that of the record with the cookie value
+
+        String uuid = sessionCookie.getValue();
+        System.out.println("Invoked User.validateSessionCookie(), cookie value " + uuid);
+
+        try {
+            PreparedStatement statement = Main.db.prepareStatement(
+                    "SELECT UserID FROM Users WHERE UUID = ?"
+            );
+            statement.setString(4, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println("userID is " + resultSet.getInt("UserID"));
+            return resultSet.getInt("UserID");  //Retrieve by column name  (should really test we only get one result back!)
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return -1;
+
         }
     }
 

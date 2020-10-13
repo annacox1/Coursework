@@ -5,7 +5,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import server.Main;
 
+
 import javax.ws.rs.*;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,12 +20,18 @@ import java.sql.ResultSet;
 public class Entry {
     @GET
     @Path("list")
-    public String entryList() {
+    public String entryList(@CookieParam("token") Cookie sessionCookie) {
         System.out.println("Invoked Entry.entryList()");
+        int userID = User.validateSessionCookie(sessionCookie);
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
         JSONArray response = new JSONArray();
 
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT EntryID, Title, Date, Content, CategoryID FROM Entries");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT EntryID, Title, Date, Content, CategoryID FROM Entries WHERE UserID = ?");
+            ps.setInt(1, userID);
+
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
@@ -40,27 +48,7 @@ public class Entry {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
-    @POST
-    @Path("update")
-    public String updateEntry(@FormDataParam("EntryID") Integer entryID, @FormDataParam("Title") String title, @FormDataParam("Date") Integer date, @FormDataParam("Content") Integer content, @FormDataParam("CategoryID") Integer categoryID) {
-        try {
-            System.out.println("Invoked Entry.updateEntry/update id=" + entryID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Entry SET Title = ?, Date = ? , Content = ?, CategoryID = ? WHERE FoodID = ?");
-            ps.setString(2, title);
-            ps.setInt(4, date);
-            ps.setInt(1, entryID);
-            ps.setInt(5, content);
-            ps.execute();
-            return "{\"OK\": \"Entry updated\"}";
-        } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
-        }
-    }
 
-
-
-
-        }
+}
 
 
