@@ -27,6 +27,7 @@ public class Event {
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
+                row.put("EntryID", results.getString(1));
                 row.put("Title", results.getString(2));
                 row.put("Description", results.getString(3));
                 row.put("Location", results.getString(4));
