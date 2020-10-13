@@ -1,0 +1,67 @@
+
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <div class="vertical-menu">
+        <a href="Home.html" >Entries</a>
+        <a href="Calendar.html"class="active">Calendar</a>
+        <a href="Maps.html">Maps</a>
+    </div>
+
+    <title>Calendar</title>
+    <script>
+        "use strict";
+
+        function getEventList() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            console.log("Invoked getEventList()");
+
+            const url = "/event/list";
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+        }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                alert(JSON.stringify(response));
+            } else {
+                formatEventList(response);
+            }
+        });
+        }
+        function formatEventList(myJSON){
+            let dataHTML = "<th> ID </th><th> Title</th><th> Description</th><th> Location</th><th> Date</th>";
+
+            for (let item of myJSON) {
+
+                dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Location + "</td><td>+ item.Date +</td></tr>";
+            }
+            document.getElementById("eventTable").innerHTML += dataHTML;
+
+
+        }
+
+    </script>
+
+
+</head>
+<body>
+
+<h1>Calendar</h1>
+<hr>
+<div id="myDIV">
+    <BR>
+    <button onclick='getEventList();'>Display Events</button>
+</div>
+<BR>
+<BR>
+<table id="eventTable">
+
+</table>
+</body>
+</html>
