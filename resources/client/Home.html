@@ -1,0 +1,78 @@
+<html lang='en'>
+
+<head>
+    <link rel="stylesheet" href="css/style.css">
+
+
+
+    <title>Odyssey Journal</title>
+    <div class="vertical-menu">
+        <a href="#" class="active">Entries</a>
+        <a href="Calendar.html">Calendar</a>
+        <a href="Maps.html">Maps</a>
+    </div>
+
+    <script>
+        "use strict";
+
+        function getEntryList() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            console.log("Invoked getEntryList()");
+
+            const url = "/entry/list";
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(JSON.stringify(response));
+                } else {
+                    formatEntryList(response);
+                }
+            });
+        }
+        function formatEntryList(myJSON){
+            let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th>";
+
+            for (let item of myJSON) {
+
+                dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td></tr>";
+            }
+            document.getElementById("entryTable").innerHTML += dataHTML;
+
+
+        }
+
+    </script>
+
+
+</head>
+
+<body>
+<h1>Welcome to Odyssey Journal</h1>
+<hr>
+<div id="myDIV">
+    <BR>
+    <button onclick='getEntryList();'>Display Entries</button>
+</div>
+<BR>
+<BR>
+
+
+<div id="name"></div>
+
+<div id="demo"></div>
+<table id="entryTable">
+
+</table>
+
+
+</body>
+
+</html>
