@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import server.Main;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,20 +19,22 @@ import java.sql.ResultSet;
 public class Event {
     @GET
     @Path("list")
-    public String eventList() {
+    public String eventList(@CookieParam("token") Cookie cookie) {
         System.out.println("Invoked Event.eventList()");
+        int userID = User.validateToken(cookie);
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
         JSONArray response = new JSONArray();
 
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT EventId, Title, Date, Description, Location, CategoryID FROM Events");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT EventId, Title, Date, Description, Location, CategoryID FROM Events WHERE UserID = ?");
+            ps.setInt(1, userID);
+
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
-//                row.put("EntryID", results.getString(1));  // 1 means first column returned from SQL query
-//                row.put("Title", results.getString(2));    // 2 means second column returned from SQL query
-//                row.put("Description", results.getString(3));  //3 means third column which is date but you're putting as descriptoin
-//                row.put("Location", results.getString(4));
-//                row.put("Date", results.getString(5));
+//
                 row.put("EntryID", results.getString(1));
                 row.put("Title", results.getString(2));
                 row.put("Date", results.getString(3));
@@ -46,9 +49,5 @@ public class Event {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
-
-
-
-
 
 }
