@@ -33,7 +33,10 @@ h1{
     font-family : Arial, sans-serif, verdana ;
     align-content: center;
 }
-
+h2{
+    font-family : Arial, sans-serif, verdana ;
+    align-content: center;
+}
 body{
     background-color: #f5e0ff;
 }

@@ -50,6 +50,27 @@ public class Entry {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
+    @POST
+    @Path("add")
+    public String entryAdd(@FormDataParam("entryID") Integer entryID, @FormDataParam("categoryID") Integer categoryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("userID") Integer userID) {
+        System.out.println("Invoked Entry.entryAdd()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Entries (entryID, categoryID, title, date, content, userID, ) VALUES (?, ?, ?, ?, ?, ?)");
+            ps.setInt(1, entryID);
+            ps.setInt(2, categoryID);
+            ps.setString(3, title);
+            ps.setString(4, date);
+            ps.setString(5, content);
+            ps.setInt(6, userID);
+            ps.execute();
+            return "{\"OK\": \"Added entry.\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
+        }
+
+    }
+
 
 
 

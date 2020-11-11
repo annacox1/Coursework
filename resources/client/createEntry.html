@@ -4,31 +4,15 @@
 
     <link rel="stylesheet" href="css/style.css">
     <script>
-        function uploadImage() {
-            console.log("invoked uploadImage()");
-            var fileInput = document.getElementById('the-file');
-            var file = fileInput.files[0];
-            var formData = new FormData();
-            formData.append('file', file);
 
-            const url = "/user/image";
+        function postCreateEntry() {
+            console.log("Invoked postCreateEntry() ");
 
-            fetch(url, {
-                method: "POST",
-                body: formData,
-            }).then(response => {
-                return response.text()          //method returns a promise, have to return from here to get text
-            }).then(response => {
-                if (response.startsWith('Error')) {
-                    alert(response);
-                } else {
-                    window.open("profile.html", "_self");
-                }
-            });
+            var url = "/entry/add";
+            var formData = new FormData(document.getElementById('entryForm'));
+
 
         }
-
-
     </script>
 
 
@@ -41,11 +25,24 @@
     </div>
 </head>
 <body>
-<form id="uploadForm" enctype="multipart/form-data">
-    <input id="the-file" name="file" type="file">
+<h2>Create Entry</h2>
+<form id="entryForm">
+    <p>Title:</p>
+    <input type="text" name="title" id="title">
+
+    <BR>
+    <p>Date:</p>
+    <input type="text" name="date" id="date">
+    <BR>
+    <p>Content:</p>
+    <input type="text" name="content" id="content">
+    <BR>
+
+    <p>Category:</p>
+    <input type="text" name="category" id="category">
+
 </form>
-
-<button id="uploadImage" class="button" onclick='uploadImage();' >UPLOAD IMAGE</button>
-
+<BR>
+<button class="button" onclick='postCreateEntry();'>SUBMIT</button>
 </body>
 </html>
