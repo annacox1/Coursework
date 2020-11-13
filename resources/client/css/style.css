@@ -1,11 +1,21 @@
 
 .vertical-menu {
-    width: 200px;
     align-content: left;
     float: left;
     padding: 15px;
     font-family : Arial, sans-serif, verdana ;
+    width: 13%;
+
 }
+
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+
+}
+
+.vertical-menu {width: 13%;}
+.col-2 {width: 87%;}
 
 .vertical-menu a {
     background-color: #eee;
@@ -60,5 +70,6 @@ th {
 button{
     align-content: center;
 }
+
 
 

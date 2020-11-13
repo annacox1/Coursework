@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 
 
 public class Entry {
+
     @GET
     @Path("list")
     public String entryList(@CookieParam("token") Cookie cookie) {
@@ -50,10 +51,41 @@ public class Entry {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
+    @GET
+    @Path("category")
+    public String entryList(@CookieParam("token") Cookie cookie) {
+        System.out.println("Invoked Entry.categoryList()");
+        int userID = User.validateToken(cookie);
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
+        JSONArray response = new JSONArray();
+
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Title FROM Categories");
+            ps.setInt(1, userID);
+
+            ResultSet results = ps.executeQuery();
+            while (results.next()==true) {
+                JSONObject row = new JSONObject();
+                row.put("Title", results.getInt(1));   // 1 means the first column returned from the SQL query
+
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
+        }
+    }
     @POST
     @Path("add")
-    public String entryAdd(@FormDataParam("entryID") Integer entryID, @FormDataParam("categoryID") Integer categoryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("userID") Integer userID) {
+    public String entryAdd(@FormDataParam("entryID") Integer entryID, @FormDataParam("categoryID") Integer categoryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @CookieParam("token") Cookie cookie) {
         System.out.println("Invoked Entry.entryAdd()");
+        int userID = User.validateToken(cookie);
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Entries (entryID, categoryID, title, date, content, userID, ) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setInt(1, entryID);

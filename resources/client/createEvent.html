@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+
+        function postCreateEvent() {
+            console.log("Invoked postCreateEvent() ");
+
+            var url = "/event/add";
+            var formData = new FormData(document.getElementById('eventForm'));
+        }
+
+
+
+
+    </script>
+
+
+
+    <title>Create Event</title>
+
+    <div class="vertical-menu">
+        <a href="Home.html" >Entries</a>
+        <a href="Calendar.html" class="active">Calendar</a>
+        <a href="Maps.html">Maps</a>
+    </div>
+</head>
+<body>
+<table id="eventTable">
+
+</table>
+
+<h2>Create Event</h2>
+
+<div class="col-2">
+
+    <form id="eventForm">
+        <p>Title:</p>
+        <input type="text" name="title" id="title">
+
+        <BR>
+        <p>Date:</p>
+        <input type="date" name="date" id="date">
+        <BR>
+
+        <p>Description:</p>
+        <input type="text" name="description" id="description">
+        <BR>
+
+        <p>Location:</p>
+        <input type="text" name="location" id="location">
+        <BR>
+
+
+        <p>Category:</p>
+        <input list = "categories" name="category" id="category">
+        <datalist id="categories">
+            <option id = "one" value = " ">
+            <option id = "two" value=" ">
+            <option id = "three" value=" ">
+        </datalist>
+
+    </form>
+
+
+    <BR>
+    <button class="button" onclick='postCreateEvent();'>CREATE</button>
+</div>
+
+</body>
+</html>

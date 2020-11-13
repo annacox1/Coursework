@@ -7,17 +7,39 @@
 
         function postCreateEntry() {
             console.log("Invoked postCreateEntry() ");
-
+        }
             var url = "/entry/add";
             var formData = new FormData(document.getElementById('entryForm'));
+        }
+        const url = "/entry/category";
+        fetch(url, {
+            method: "GET",
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            if (response.hasOwnProperty("Error")) {
+            alert(JSON.stringify(response));
+        } else {
+            formatCategoryList(response);
+        }
+        });
+        function formatCategoryList(myJSON) {
 
+            for (let item of myJSON) {
+                //replace option value with title of category
+
+
+            }
 
         }
+
+
     </script>
 
 
 
     <title>Create Entry</title>
+
     <div class="vertical-menu">
         <a href="#" class="active">Entries</a>
         <a href="Calendar.html">Calendar</a>
@@ -25,24 +47,40 @@
     </div>
 </head>
 <body>
+<table id="entryTable">
+
+</table>
+
 <h2>Create Entry</h2>
+
+<div class="col-2">
+
 <form id="entryForm">
     <p>Title:</p>
     <input type="text" name="title" id="title">
 
     <BR>
     <p>Date:</p>
-    <input type="text" name="date" id="date">
+    <input type="date" name="date" id="date">
     <BR>
     <p>Content:</p>
     <input type="text" name="content" id="content">
     <BR>
 
     <p>Category:</p>
-    <input type="text" name="category" id="category">
+    <input list = "categories" name="category" id="category">
+    <datalist id="categories">
+        <option id = "one" value = " ">
+        <option id = "two" value= " ">
+        <option id = "three" value= " ">
+    </datalist>
 
 </form>
+
+
 <BR>
-<button class="button" onclick='postCreateEntry();'>SUBMIT</button>
+<button class="button" onclick='postCreateEntry();'>CREATE</button>
+</div>
+
 </body>
 </html>
