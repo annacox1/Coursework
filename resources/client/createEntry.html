@@ -5,37 +5,64 @@
     <link rel="stylesheet" href="css/style.css">
     <script>
 
+        function pageLoad() {
+            console.log("Invoked pageLoad() ");
+            getCategories();
+
+        }
+
+        function getCategories() {
+            console.log("Invoked getCategories() ");
+            var url = "/entry/category";
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(JSON.stringify(response));
+                } else {
+                    console.log(response);
+                    populateCategoriesDropdown(response);
+                }
+            });
+        }
+
+
+        function populateCategoriesDropdown(response) {
+            console.log("Invoked populateCategoriesDropdown() ");
+
+            let html = "";
+            for (let item of response) {
+                html+= "<option value=" + item.CategoryID + ">" + item.Title + "</option>"
+             }
+            document.getElementById("ddlCategories").innerHTML = html;
+
+        }
+
         function postCreateEntry() {
             console.log("Invoked postCreateEntry() ");
-        }
+
             var url = "/entry/add";
             var formData = new FormData(document.getElementById('entryForm'));
-        }
-        const url = "/entry/category";
-        fetch(url, {
-            method: "GET",
-        }).then(response => {
-            return response.json();
-        }).then(response => {
-            if (response.hasOwnProperty("Error")) {
-            alert(JSON.stringify(response));
-        } else {
-            formatCategoryList(response);
-        }
-        });
-        function formatCategoryList(myJSON) {
 
-            for (let item of myJSON) {
-                //replace option value with title of category
-
-
-            }
-
+            fetch(url, {
+                method: "POST",
+                body: formData,
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(JSON.stringify(response));
+                } else {
+                    alert("new entry added");
+                    ///  what to do when new entry added?
+                }
+            });
         }
 
 
     </script>
-
 
 
     <title>Create Entry</title>
@@ -46,7 +73,7 @@
         <a href="Maps.html">Maps</a>
     </div>
 </head>
-<body>
+<body onload="pageLoad()">
 <table id="entryTable">
 
 </table>
@@ -55,31 +82,28 @@
 
 <div class="col-2">
 
-<form id="entryForm">
-    <p>Title:</p>
-    <input type="text" name="title" id="title">
+    <form id="entryForm">
+        <p>Title:</p>
+        <input type="text" name="title" id="title">
+
+        <BR>
+        <p>Date:</p>
+        <input type="date" name="date" id="date">
+        <BR>
+        <p>Content:</p>
+        <input type="text" name="content" id="content">
+        <BR>
+
+        <p>Category:</p>
+        <select name="ddlCategories" id="ddlCategories">
+        </select>
+
+
+    </form>
+
 
     <BR>
-    <p>Date:</p>
-    <input type="date" name="date" id="date">
-    <BR>
-    <p>Content:</p>
-    <input type="text" name="content" id="content">
-    <BR>
-
-    <p>Category:</p>
-    <input list = "categories" name="category" id="category">
-    <datalist id="categories">
-        <option id = "one" value = " ">
-        <option id = "two" value= " ">
-        <option id = "three" value= " ">
-    </datalist>
-
-</form>
-
-
-<BR>
-<button class="button" onclick='postCreateEntry();'>CREATE</button>
+    <button class="button" onclick='postCreateEntry();'>CREATE</button>
 </div>
 
 </body>

@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import server.Main;
 
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
@@ -53,55 +54,53 @@ public class Entry {
     }
     @GET
     @Path("category")
-    public String entryList(@CookieParam("token") Cookie cookie) {
-        System.out.println("Invoked Entry.categoryList()");
-        int userID = User.validateToken(cookie);
-        if (userID == -1) {
-            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
-        }
+    public String entryCategory(@CookieParam("token") Cookie cookie) {
+        System.out.println("Invoked Entry.entryCategory()");
         JSONArray response = new JSONArray();
-
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT Title FROM Categories");
-            ps.setInt(1, userID);
-
+            PreparedStatement ps = Main.db.prepareStatement("SELECT CategoryID, Title FROM Categories");
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
-                row.put("Title", results.getInt(1));   // 1 means the first column returned from the SQL query
-
+                row.put("CategoryID", results.getInt(1));   // 1 means the first column returned from the SQL query
+                row.put("Title", results.getString(2));   // 1 means the first column returned from the SQL query
                 response.add(row);
             }
             return response.toString();
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
+            return "{\"Error\": \"Unable to get Categories.  Error code E.C\"}";
         }
     }
-    @POST
+
+
+   @POST
     @Path("add")
-    public String entryAdd(@FormDataParam("entryID") Integer entryID, @FormDataParam("categoryID") Integer categoryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @CookieParam("token") Cookie cookie) {
-        System.out.println("Invoked Entry.entryAdd()");
+   public String entryAdd(@FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID,  @CookieParam("token") Cookie cookie) {
+       System.out.println("Invoked Entry.entryAdd()");
         int userID = User.validateToken(cookie);
         if (userID == -1) {
-            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
-        }
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Entries (entryID, categoryID, title, date, content, userID, ) VALUES (?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, entryID);
-            ps.setInt(2, categoryID);
-            ps.setString(3, title);
-            ps.setString(4, date);
-            ps.setString(5, content);
-            ps.setInt(6, userID);
+           return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+       }
+       try {
+           PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Entries (title, date, content, categoryID, userID) VALUES (?, ?, ?, ?, ?)");
+            ps.setString(1, title);
+            ps.setString(2, date);
+            ps.setString(3, content);
+             ps.setInt(4, categoryID);
+            ps.setInt(5, userID);
             ps.execute();
             return "{\"OK\": \"Added entry.\"}";
         } catch (Exception exception) {
-            System.out.println("Database error: " + exception.getMessage());
+           System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
         }
 
     }
+
+
+
+
 
 
 
