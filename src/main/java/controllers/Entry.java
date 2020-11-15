@@ -52,6 +52,7 @@ public class Entry {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
+
     @GET
     @Path("category")
     public String entryCategory(@CookieParam("token") Cookie cookie) {

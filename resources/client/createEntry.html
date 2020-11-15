@@ -8,7 +8,24 @@
         function pageLoad() {
             console.log("Invoked pageLoad() ");
             getCategories();
+            getUserName()
 
+
+        }
+        function getUserName(){
+            console.log("Invoked getUserName")
+            const url = "/user/username";
+            fetch(url, {
+                method : "GET",
+            }).then(response=> {
+                return response.json();
+            }).then(response=> {
+                if (response.hasOwnProperty("Error")){
+                    alert(JSON.stringify(response));
+                } else{
+                    document.getElementById("name").innerHTML = response;
+                }
+            });
         }
 
         function getCategories() {
@@ -80,6 +97,10 @@
 
 <h2>Create Entry</h2>
 
+<div id ="name">
+    <p>*username goes here*</p>
+</div>
+<hr>
 <div class="col-2">
 
     <form id="entryForm">

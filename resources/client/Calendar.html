@@ -12,6 +12,28 @@
     <script>
         "use strict";
 
+        function pageLoad() {
+            console.log("Invoked pageLoad() ");
+            getUserName();
+
+        }
+
+        function getUserName(){
+            console.log("Invoked getUserName")
+            const url = "/user/username";
+            fetch(url, {
+                method : "GET",
+            }).then(response=> {
+                return response.json();
+            }).then(response=> {
+                if (response.hasOwnProperty("Error")){
+                    alert(JSON.stringify(response));
+                } else{
+                    document.getElementById("name").innerHTML = response;
+                }
+            });
+        }
+
         function getEventList() {
             var x = document.getElementById("myDIV");
             if (x.style.display === "none") {
@@ -50,9 +72,12 @@
 
 
 </head>
-<body>
+<body onload="pageLoad()">
 
 <h1>Calendar</h1>
+<div id ="name">
+    <p>*username goes here*</p>
+</div>
 <hr>
 <div id="myDIV">
     <BR>

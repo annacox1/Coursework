@@ -1,9 +1,11 @@
 package controllers;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import server.Main;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.POST;
@@ -14,7 +16,33 @@ import java.util.UUID;
 
 @Path("user/")
 public class User {
+    @GET
+    @Path ("username")
+    public String userName(@CookieParam("token") Cookie cookie) {
+        System.out.println("Invoked Entry.entryList()");
+        int userID = User.validateToken(cookie);
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
+        JSONArray response = new JSONArray();
 
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Username FROM Users WHERE UserID = ?");
+            ps.setInt(1, userID);
+
+            ResultSet results = ps.executeQuery();
+            while (results.next() == true) {
+                JSONObject row = new JSONObject();
+                row.put("Username", results.getInt(1));
+                response.add(row);
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
+        }
+
+    }
 
     @POST
     @Path("login")
