@@ -99,10 +99,10 @@ public class Entry {
 
     }
     @POST
-    @Path("delete/{entryID}"")
+    @Path("delete/{entryID}")
 
             public String deleteEntry(@PathParam("entryID") Integer entryID) {
-            System.out.println("Invoked deleteEntry());
+            System.out.println("Invoked deleteEntry()");
                 try {
                     PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Entries WHERE EntryID = ?");
                     ps.setInt(1, entryID);

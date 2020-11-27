@@ -61,8 +61,8 @@ public class Event {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Eventd (title, date, description, location, categoryID, userID) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setString(1, title);
             ps.setString(2, date);
-            ps.setString(3, description;
-            ps.setString(4, location;
+            ps.setString(3, description);
+            ps.setString(4, location);
             ps.setInt(5, categoryID);
             ps.setInt(6, userID);
             ps.execute();

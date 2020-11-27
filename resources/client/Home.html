@@ -1,127 +1,109 @@
-<html lang='en'>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="css/style.css">
+
+    <head>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+
+        <link rel="stylesheet" href="css/style.css">
 
 
-    <title>Odyssey Journal - Entries </title>
-    <div class="vertical-menu">
-        <a href="#" class="active">Entries</a>
-        <a href="Calendar.html">Calendar</a>
-        <a href="Maps.html">Maps</a>
-    </div>
+        <title>Odyssey Journal - Entries </title>
+        <div class="vertical-menu">
+            <a href="#" class="active">Entries</a>
+            <a href="Calendar.html">Calendar</a>
+            <a href="Maps.html">Maps</a>
+        </div>
 
-    <script>
-        "use strict";
+        <script>
+            "use strict";
 
-        function pageLoad() {
-            console.log("Invoked pageLoad() ");
-            getUserName();
-
-        }
-
-        function getUserName() {
-            console.log("Invoked getUserName")
-            const url = "/user/username";
-            fetch(url, {
-                method: "GET",
-            }).then(response => {
-                return response.json();
-        }).
-            then(response => {
-                if(response.hasOwnProperty("Error")
-        )
-            {
-                alert(JSON.stringify(response));
+            function pageLoad() {
+                console.log("Invoked pageLoad() ");
+                document.getElementById('username').innerHTML = "Hello " + getCookie('username');
             }
-        else
-            {
-                document.getElementById("name").innerHTML = response;
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
             }
-        })
-            ;
-        }
 
-        function getEntryList() {
-            var x = document.getElementById("myDIV");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
+
+            function getEntryList() {
+                var x = document.getElementById("myDIV");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+                console.log("Invoked getEntryList()");
+
+                const url = "/entry/list";
+                fetch(url, {
+                    method: "GET",
+                }).then(response => {
+                    return response.json();
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")
+                    ) {
+                        alert(JSON.stringify(response));
+                    } else {
+                        formatEntryList(response);
+                    }
+                })
+                ;
             }
-            console.log("Invoked getEntryList()");
 
-            const url = "/entry/list";
-            fetch(url, {
-                method: "GET",
-            }).then(response => {
-                return response.json();
-        }).
-            then(response => {
-                if(response.hasOwnProperty("Error")
-        )
-            {
-                alert(JSON.stringify(response));
+            function formatEntryList(myJSON) {
+                let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th><th>Delete?</th></th>";
+
+                for (let item of myJSON) {
+                    dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td><td><button onclick='deleteEntry(" + item.EntryID + ");'>Delete</button></td></tr>";
+                }
+                document.getElementById("entryTable").innerHTML += dataHTML;
             }
-        else
-            {
-                formatEntryList(response);
+
+            function deleteEntry(ID) {
+                console.log("Invoked deleteEntry")
+                console.log(ID);
+
+                var url = "/entry/delete/";
+
+                fetch(url + ID, {
+                    method: "POST",
+                }).then(response => {
+                    return response.json();
+                }).then(response => {
+                    if (response.hasOwnProperty("Error")
+                    ) {
+                        alert(JSON.stringify(response));
+                    } else {
+                        alert(" entry deleted");
+                    }
+                });
             }
-        })
-            ;
-        }
-
-        function formatEntryList(myJSON) {
-            let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th><th>Delete?</th></th>";
-
-            for (let item of myJSON) {
 
 
-                dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td><td><button onclick='deleteEntry(item.EntryID);'>Delete</button></td></tr>";
-            }
-            document.getElementById("entryTable").innerHTML += dataHTML;
+        </script>
 
 
-        }
-
-        function deleteEntry(ID) {
-            console.log("Invoked deleteEntry")
-            console.log(ID);
-
-
-            var url = "/entry/delete";
-            var formData = new FormData(ID);
-
-            fetch(url, {
-                method: "POST",
-                body: formData,
-            }).then(response => {
-                return response.json();
-        }).
-            then(response => {
-                if(response.hasOwnProperty("Error")
-        )
-            {
-                alert(JSON.stringify(response));
-            }
-        else
-            {
-                alert(" entry deleted");
-
-            }
-        })
-            ;
-        }
-
-
-    </script>
-
-
-</head>
+    </head>
 
 <body onload="pageLoad()">
 <h1>Welcome to Odyssey Journal</h1>
-<div id="name">
+<div id="username">
     <p>*username goes here*</p>
 </div>
 <hr>
