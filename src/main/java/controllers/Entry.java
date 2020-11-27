@@ -98,15 +98,25 @@ public class Entry {
         }
 
     }
+    @POST
+    @Path("delete/{entryID}"")
+
+            public String deleteEntry(@PathParam("entryID") Integer entryID) {
+            System.out.println("Invoked deleteEntry());
+                try {
+                    PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Entries WHERE EntryID = ?");
+                    ps.setInt(1, entryID);
+                    ps.execute();
+                return "{\"OK\": \"Entry deleted\"}";
+           }    catch (Exception exception) {
+                 System.out.println("Database error: " + exception.getMessage());
+                    return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
+                }
+            }
 
 
 
 
-
-
-
-
-
-}
+        }
 
 

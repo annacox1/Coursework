@@ -5,18 +5,81 @@
     <link rel="stylesheet" href="css/style.css">
     <script>
 
+        function pageLoad() {
+            console.log("Invoked pageLoad() ");
+            getCategories();
+            getUserName()
+
+
+        }
+        function getUserName(){
+            console.log("Invoked getUserName")
+            const url = "/user/username";
+            fetch(url, {
+                method : "GET",
+            }).then(response=> {
+                return response.json();
+        }).then(response=> {
+                if (response.hasOwnProperty("Error")){
+                alert(JSON.stringify(response));
+            } else{
+                document.getElementById("name").innerHTML = response;
+            }
+        });
+        }
+
+        function getCategories() {
+            console.log("Invoked getCategories() ");
+            var url = "/entry/category";
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+        }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                alert(JSON.stringify(response));
+            } else {
+                console.log(response);
+                populateCategoriesDropdown(response);
+            }
+        });
+        }
+
+
+        function populateCategoriesDropdown(response) {
+            console.log("Invoked populateCategoriesDropdown() ");
+
+            let html = "";
+            for (let item of response) {
+                html+= "<option value=" + item.CategoryID + ">" + item.Title + "</option>"
+            }
+            document.getElementById("ddlCategories").innerHTML = html;
+
+        }
+
         function postCreateEvent() {
             console.log("Invoked postCreateEvent() ");
 
             var url = "/event/add";
             var formData = new FormData(document.getElementById('eventForm'));
+
+            fetch(url, {
+                method: "POST",
+                body: formData,
+            }).then(response => {
+                return response.json();
+        }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                alert(JSON.stringify(response));
+            } else {
+                alert("new event added");
+                ///  what to do when new entry added?
+            }
+        });
         }
 
 
-
-
     </script>
-
 
 
     <title>Create Event</title>
@@ -27,13 +90,17 @@
         <a href="Maps.html">Maps</a>
     </div>
 </head>
-<body>
+<body onload="pageLoad()">
 <table id="eventTable">
 
 </table>
 
 <h2>Create Event</h2>
 
+<div id ="name">
+    <p>*username goes here*</p>
+</div>
+<hr>
 <div class="col-2">
 
     <form id="eventForm">
@@ -44,23 +111,17 @@
         <p>Date:</p>
         <input type="date" name="date" id="date">
         <BR>
-
         <p>Description:</p>
         <input type="text" name="description" id="description">
         <BR>
-
         <p>Location:</p>
         <input type="text" name="location" id="location">
         <BR>
 
-
         <p>Category:</p>
-        <input list = "categories" name="category" id="category">
-        <datalist id="categories">
-            <option id = "one" value = " ">
-            <option id = "two" value=" ">
-            <option id = "three" value=" ">
-        </datalist>
+        <select name="ddlCategories" id="ddlCategories">
+        </select>
+
 
     </form>
 

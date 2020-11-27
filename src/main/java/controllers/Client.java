@@ -20,7 +20,7 @@ public class Client {
     @Path("img/{path}")
     @Produces({"image/jpeg,image/png"})
     public byte[] getImageFile(@PathParam("path") String path) {
-        return getFile("client/img/" + path);
+        return getFile("img/" + path);
     }
 
     @GET

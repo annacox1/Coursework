@@ -49,5 +49,30 @@ public class Event {
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
+    @POST
+    @Path("add")
+    public String eventAdd(@FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("description") String description, @FormDataParam("location") String location, @FormDataParam("ddlCategories") int categoryID,  @CookieParam("token") Cookie cookie) {
+        System.out.println("Invoked Event.eventAdd()");
+        int userID = User.validateToken(cookie);
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Eventd (title, date, description, location, categoryID, userID) VALUES (?, ?, ?, ?, ?, ?)");
+            ps.setString(1, title);
+            ps.setString(2, date);
+            ps.setString(3, description;
+            ps.setString(4, location;
+            ps.setInt(5, categoryID);
+            ps.setInt(6, userID);
+            ps.execute();
+            return "{\"OK\": \"Added event.\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
+        }
+
+    }
+
 
 }
