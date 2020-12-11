@@ -37,10 +37,10 @@ public class Entry {
             ps.setInt(1, userID);
 
             ResultSet results = ps.executeQuery();
-            while (results.next()==true) {
+            while (results.next() == true) {
                 JSONObject row = new JSONObject();
-                row.put("EntryID", results.getInt(1));   // 1 means the first column returned from the SQL query
-                row.put("Title", results.getString(2));  //  2 means the second columns returned from the SQL query
+                row.put("EntryID", results.getInt(1));
+                row.put("Title", results.getString(2));
                 row.put("Date", results.getString(3));
                 row.put("Content", results.getString(4));
                 row.put("CategoryID", results.getInt(5));
@@ -61,7 +61,7 @@ public class Entry {
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT CategoryID, Title FROM Categories");
             ResultSet results = ps.executeQuery();
-            while (results.next()==true) {
+            while (results.next() == true) {
                 JSONObject row = new JSONObject();
                 row.put("CategoryID", results.getInt(1));   // 1 means the first column returned from the SQL query
                 row.put("Title", results.getString(2));   // 1 means the first column returned from the SQL query
@@ -75,48 +75,86 @@ public class Entry {
     }
 
 
-   @POST
+    @POST
     @Path("add")
-   public String entryAdd(@FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID,  @CookieParam("token") Cookie cookie) {
-       System.out.println("Invoked Entry.entryAdd()");
+    public String entryAdd(@FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
+        System.out.println("Invoked Entry.entryAdd()");
         int userID = User.validateToken(cookie);
         if (userID == -1) {
-           return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
-       }
-       try {
-           PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Entries (title, date, content, categoryID, userID) VALUES (?, ?, ?, ?, ?)");
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Entries (title, date, content, categoryID, userID) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, title);
             ps.setString(2, date);
             ps.setString(3, content);
-             ps.setInt(4, categoryID);
+            ps.setInt(4, categoryID);
             ps.setInt(5, userID);
             ps.execute();
             return "{\"OK\": \"Added entry.\"}";
         } catch (Exception exception) {
-           System.out.println("Database error: " + exception.getMessage());
+            System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
         }
 
     }
+
     @POST
     @Path("delete/{entryID}")
 
-            public String deleteEntry(@PathParam("entryID") Integer entryID) {
-            System.out.println("Invoked deleteEntry()");
-                try {
-                    PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Entries WHERE EntryID = ?");
-                    ps.setInt(1, entryID);
-                    ps.execute();
-                return "{\"OK\": \"Entry deleted\"}";
-           }    catch (Exception exception) {
-                 System.out.println("Database error: " + exception.getMessage());
-                    return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
-                }
-            }
-
-
-
-
+    public String deleteEntry(@PathParam("entryID") Integer entryID) {
+        System.out.println("Invoked deleteEntry()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Entries WHERE EntryID = ?");
+            ps.setInt(1, entryID);
+            ps.execute();
+            return "{\"OK\": \"Entry deleted\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
         }
+    }
+
+    @POST
+    @Path("update")
+    public String updateEntry(@FormDataParam("entryID") String entryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
+        try {
+            System.out.println("Invoked Entry.updateEntry/update id=" + entryID);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Entries SET Title = ?, Date = ? , Content = ?, CategoryID =? WHERE EntryID = ?");
+            ps.setString(1, title);
+            ps.setString(2, date);
+            ps.setString(3, content);
+            ps.setString(4, categoryID);
+            ps.execute();
+            return "{\"OK\": \"Entry updated\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
+        }
+
+
+    }
+    @GET
+    @Path("get/{entryID}")
+    public String getEntry(@PathParam("entryID") Integer entryID) {
+        System.out.println("Invoked Entry.getEntry() with entryID " + entryID);
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Title, Date, Content, CategoryID FROM Entries WHERE EntryID = ?");
+            ps.setInt(1, entryID);
+            ResultSet results = ps.executeQuery();
+            JSONObject response = new JSONObject();
+            if (results.next()== true) {
+                response.put("EntryID", entryID);
+                response.put("Title", results.getString(1));
+                response.put("Content", results.getString(2));
+                response.put("CategoryID", results.getInt(3));
+            }
+            return response.toString();
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";
+        }
+
+    }
 
 

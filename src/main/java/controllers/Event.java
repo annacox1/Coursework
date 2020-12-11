@@ -28,14 +28,14 @@ public class Event {
         JSONArray response = new JSONArray();
 
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT EventId, Title, Date, Description, Location, CategoryID FROM Events WHERE UserID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT EventID, Title, Date, Description, Location, CategoryID FROM Events WHERE UserID = ?");
             ps.setInt(1, userID);
 
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
 //
-                row.put("EntryID", results.getString(1));
+                row.put("EventID", results.getString(1));
                 row.put("Title", results.getString(2));
                 row.put("Date", results.getString(3));
                 row.put("Description", results.getString(4));
@@ -51,18 +51,18 @@ public class Event {
     }
     @POST
     @Path("add")
-    public String eventAdd(@FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("description") String description, @FormDataParam("location") String location, @FormDataParam("ddlCategories") int categoryID,  @CookieParam("token") Cookie cookie) {
+    public String eventAdd(@FormDataParam("title") String title, @FormDataParam("description") String description, @FormDataParam("location") String location, @FormDataParam("date") String date, @FormDataParam("ddlCategories") int categoryID,  @CookieParam("token") Cookie cookie) {
         System.out.println("Invoked Event.eventAdd()");
         int userID = User.validateToken(cookie);
         if (userID == -1) {
             return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
         }
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Eventd (title, date, description, location, categoryID, userID) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Events (title, description, location, date, categoryID, userID) VALUES (?, ?, ?, ?, ?,?)");
             ps.setString(1, title);
-            ps.setString(2, date);
-            ps.setString(3, description);
-            ps.setString(4, location);
+            ps.setString(2, description);
+            ps.setString(3, location);
+            ps.setString(4, date);
             ps.setInt(5, categoryID);
             ps.setInt(6, userID);
             ps.execute();
@@ -72,6 +72,21 @@ public class Event {
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
         }
 
+    }
+    @POST
+    @Path("delete/{eventID}")
+
+    public String deleteEvent(@PathParam("eventID") Integer eventID) {
+        System.out.println("Invoked deleteEntry()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Events WHERE EventID = ?");
+            ps.setInt(1, eventID);
+            ps.execute();
+            return "{\"OK\": \"Event deleted\"}";
+        }    catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
+        }
     }
 
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+
+        function pageLoad() {
+            console.log("Invoked pageLoad() ");
+            document.getElementById('username').innerHTML = "Hello " + getCookie('username');
+            console.log("sessionStorage entryID = " + sessionStorage.getItem("entryID"));
+            updateEntry(sessionStorage.getItem("entryID"));
+        }
+
+
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function updateEntry(ID){
+            console.log("Invoked updateEntry");
+            var url = "/entry/get/";
+            fetch(url + ID, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")
+                ) {
+                    alert(JSON.stringify(response));
+                } else {
+                    formatEntryList(response);
+                }
+            });
+
+        }
+
+        function formatEntryList(myJSON) {
+            let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th>";
+
+            for (let item of myJSON) {
+                dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td></tr>";
+            }
+
+        }
+
+
+    </script>
+
+
+    <title>Edit Entry</title>
+
+    <div class="vertical-menu">
+        <a href="#" class="active">Entries</a>
+        <a href="Calendar.html">Calendar</a>
+        <a href="Maps.html">Maps</a>
+    </div>
+</head>
+<body onload="pageLoad()">
+
+
+<h2>Edit Entry</h2>
+
+<div id ="username">
+    <p>*username goes here*</p>
+</div>
+<hr>
+<div class="col-2">
+
+    <form id="entryForm">
+        <p>Title:</p>
+        <input type="text" name="title" id="title">
+
+        <BR>
+        <p>Date:</p>
+        <input type="date" name="date" id="date">
+        <BR>
+        <p>Content:</p>
+        <input type="text" name="content" id="content">
+        <BR>
+
+        <p>Category:</p>
+        <select name="ddlCategories" id="ddlCategories">
+        </select>
+
+
+    </form>
+
+
+    <BR>
+    <button class="button" >UPDATE</button>
+</div>
+
+
+</body>
+</html>

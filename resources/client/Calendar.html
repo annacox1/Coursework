@@ -14,25 +14,27 @@
 
         function pageLoad() {
             console.log("Invoked pageLoad() ");
-            getUserName();
+            document.getElementById('username').innerHTML = "Hello " + getCookie('username');
 
         }
-
-        function getUserName(){
-            console.log("Invoked getUserName")
-            const url = "/user/username";
-            fetch(url, {
-                method : "GET",
-            }).then(response=> {
-                return response.json();
-            }).then(response=> {
-                if (response.hasOwnProperty("Error")){
-                    alert(JSON.stringify(response));
-                } else{
-                    document.getElementById("name").innerHTML = response;
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
                 }
-            });
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         }
+
+
+
 
         function getEventList() {
             var x = document.getElementById("myDIV");
@@ -57,15 +59,38 @@
         });
         }
         function formatEventList(response){
-            let dataHTML = "<th> ID </th><th> Title</th><th> Description</th><th> Location</th><th> Date</th>";
+            let dataHTML = "<th> ID </th><th> Title</th><th> Description</th><th> Location</th><th> Date</th><th>Delete?</th><th>Edit?</th></th>";
 
             for (let item of response) {
 
-                dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Location + "</td><td>" + item.Date + "</td></tr>";
+                dataHTML += "<tr><td>" + item.EventID + "</td><td>" + item.Title + "</td><td>" + item.Description + "</td><td>" + item.Location + "</td><td>" + item.Date + "</td><td><button onclick='deleteEvent(" + item.EventID + ");'>Delete</button></td><td><button onclick='editEvent(" + item.EventID + ");'>Edit</button></td></tr>";
             }
             document.getElementById("eventTable").innerHTML += dataHTML;
 
 
+        }
+        function deleteEvent(ID) {
+            console.log("Invoked deleteEvent")
+            console.log(ID);
+
+            var url = "/event/delete/";
+
+            fetch(url + ID, {
+                method: "POST",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")
+                ) {
+                    alert(JSON.stringify(response));
+                } else {
+                    alert(" event deleted");
+                }
+            });
+        }
+
+        function editEvent(id) {
+            console.log("Invoked editEntry")
         }
 
     </script>
@@ -75,8 +100,8 @@
 <body onload="pageLoad()">
 
 <h1>Calendar</h1>
-<div id ="name">
-    <p>*username goes here*</p>
+<div id ="username">
+    <p></p>
 </div>
 <hr>
 <div id="myDIV">

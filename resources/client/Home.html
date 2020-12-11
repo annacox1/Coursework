@@ -67,10 +67,10 @@
             }
 
             function formatEntryList(myJSON) {
-                let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th><th>Delete?</th></th>";
+                let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th><th>Delete?</th><th>Edit?</th></th>";
 
                 for (let item of myJSON) {
-                    dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td><td><button onclick='deleteEntry(" + item.EntryID + ");'>Delete</button></td></tr>";
+                    dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td><td><button onclick='deleteEntry(" + item.EntryID + ");'>Delete</button></td><td><button onclick='editEntry(" + item.EntryID + ");'>Edit</button></td></tr>";
                 }
                 document.getElementById("entryTable").innerHTML += dataHTML;
             }
@@ -95,6 +95,15 @@
                 });
             }
 
+            function editEntry(id) {
+                console.log("Invoked editEntry")
+                sessionStorage.setItem("entryID", id);
+                console.log(sessionStorage.getItem("entryID"));
+                window.open("editEntry.html", "_self");
+                console.log(id);
+
+            }
+
 
         </script>
 
@@ -104,7 +113,7 @@
 <body onload="pageLoad()">
 <h1>Welcome to Odyssey Journal</h1>
 <div id="username">
-    <p>*username goes here*</p>
+    <p></p>
 </div>
 <hr>
 
@@ -123,7 +132,7 @@
 <table id="entryTable">
 
 </table>
-<button onclick="document.location='createEvent.html'">Create Entry</button>
+<button onclick="document.location='createEntry.html'">Create Entry</button>
 
 </body>
 
