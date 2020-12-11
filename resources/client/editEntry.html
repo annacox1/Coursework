@@ -41,20 +41,12 @@
                 ) {
                     alert(JSON.stringify(response));
                 } else {
-                    formatEntryList(response);
+                    alert("got entry")
                 }
             });
 
         }
 
-        function formatEntryList(myJSON) {
-            let dataHTML = "<th> ID </th><th> Title</th><th> Date</th><th> Content</th>";
-
-            for (let item of myJSON) {
-                dataHTML += "<tr><td>" + item.EntryID + "</td><td>" + item.Title + "</td><td>" + item.Date + "</td><td>" + item.Content + "</td></tr>";
-            }
-
-        }
 
 
     </script>

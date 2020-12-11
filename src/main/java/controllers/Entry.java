@@ -124,7 +124,7 @@ public class Entry {
             ps.setString(1, title);
             ps.setString(2, date);
             ps.setString(3, content);
-            ps.setString(4, categoryID);
+            ps.setInt(4, categoryID);
             ps.execute();
             return "{\"OK\": \"Entry updated\"}";
         } catch (Exception exception) {
@@ -134,6 +134,7 @@ public class Entry {
 
 
     }
+
     @GET
     @Path("get/{entryID}")
     public String getEntry(@PathParam("entryID") Integer entryID) {
@@ -143,7 +144,7 @@ public class Entry {
             ps.setInt(1, entryID);
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
-            if (results.next()== true) {
+            if (results.next() == true) {
                 response.put("EntryID", entryID);
                 response.put("Title", results.getString(1));
                 response.put("Content", results.getString(2));
@@ -156,5 +157,6 @@ public class Entry {
         }
 
     }
+}
 
 
