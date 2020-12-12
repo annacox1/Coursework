@@ -13,6 +13,7 @@
 
         }
 
+
         function getCategories() {
             console.log("Invoked getCategories() ");
             var url = "/entry/category";
@@ -27,7 +28,8 @@
                     console.log(response);
                     populateCategoriesDropdown(response);
                 }
-            });
+            }
+            return "";
         }
 
 
