@@ -41,10 +41,52 @@
                 ) {
                     alert(JSON.stringify(response));
                 } else {
-                    alert("got entry")
+
                     console.log(JSON.stringify(response));
+                    addDataToForm(response);
                 }
             });
+
+        }
+
+
+
+        function addDataToForm(response){
+            document.getElementById('title').value = response.Title;
+            document.getElementById('date').value = response.Date;
+            document.getElementById('content').value = response.Content;
+            getCategories();
+            document.getElementById('ddlCategories').value = response.CategoryID;  //this isn't working, not sure why....
+            // will have a think about it
+           }
+
+
+
+        function getCategories() {
+            console.log("Invoked getCategories() ");
+            var url = "/entry/category";
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(JSON.stringify(response));
+                } else {
+                    console.log(response);
+                    populateCategoriesDropdown(response);
+                }
+            });
+        }
+
+        function populateCategoriesDropdown(response) {
+            console.log("Invoked populateCategoriesDropdown() ");
+
+            let html = "";
+            for (let item of response) {
+                html+= "<option value=" + item.CategoryID + ">" + item.Title + "</option>"
+            }
+            document.getElementById("ddlCategories").innerHTML = html;
 
         }
 

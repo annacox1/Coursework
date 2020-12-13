@@ -59,6 +59,9 @@
         });
         }
         function formatEventList(response){
+            console.log("Invoked getEventList()");
+            console.log(response);
+
             let dataHTML = "<th> ID </th><th> Title</th><th> Description</th><th> Location</th><th> Date</th><th>Delete?</th><th>Edit?</th></th>";
 
             for (let item of response) {

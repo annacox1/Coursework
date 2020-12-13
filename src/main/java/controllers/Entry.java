@@ -145,10 +145,10 @@ public class Entry {
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
             if (results.next() == true) {
-                response.put("EntryID", entryID);
                 response.put("Title", results.getString(1));
-                response.put("Content", results.getString(2));
-                response.put("CategoryID", results.getInt(3));
+                response.put("Date", results.getString(2));
+                response.put("Content", results.getString(3));
+                response.put("CategoryID", results.getInt(4));
             }
             return response.toString();
         } catch (Exception exception) {
