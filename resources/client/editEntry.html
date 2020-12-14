@@ -89,6 +89,26 @@
             document.getElementById("ddlCategories").innerHTML = html;
 
         }
+        function postUpdateEntry() {
+            console.log("Invoked postUpdateEntry() ");
+
+            var url = "/entry/update";
+            var formData = new FormData(document.getElementById('entryForm'));
+
+            fetch(url, {
+                method: "POST",
+                body: formData,
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(JSON.stringify(response));
+                } else {
+                    alert("entry updates");
+                    window.open("Home.html", "_self");
+                }
+            });
+        }
 
 
 
@@ -135,7 +155,7 @@
 
 
     <BR>
-    <button class="button" >UPDATE</button>
+    <button class="button" onclick='postUpdateEntry();'>UPDATE</button>
 </div>
 
 
