@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 
@@ -7,11 +7,13 @@
 
         function pageLoad() {
             console.log("Invoked pageLoad() ");
-            getCategories();
             document.getElementById('username').innerHTML = "Hello " + getCookie('username');
-
-
+            console.log("sessionStorage eventID = " + sessionStorage.getItem("eventID"));
+            updateEvent(sessionStorage.getItem("eventID"));
         }
+
+
+
         function getCookie(cname) {
             var name = cname + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
@@ -27,6 +29,39 @@
             }
             return "";
         }
+        function updateEvent(ID){
+            console.log("Invoked updateEvent");
+            var url = "/event/get/";
+            fetch(url + ID, {
+                method: "GET",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")
+                ) {
+                    alert(JSON.stringify(response));
+                } else {
+
+                    console.log(JSON.stringify(response));
+                    addDataToForm(response);
+                }
+            });
+
+        }
+
+
+
+        function addDataToForm(response){
+            document.getElementById('title').value = response.Title;
+            document.getElementById('date').value = response.Date;
+            document.getElementById('description').value = response.Description;
+            document.getElementById('location').value = response.Location;
+            getCategories();
+            document.getElementById('ddlCategories').value = response.CategoryID;  //this isn't working, not sure why....
+            // will have a think about it
+        }
+
+
 
         function getCategories() {
             console.log("Invoked getCategories() ");
@@ -35,16 +70,15 @@
                 method: "GET",
             }).then(response => {
                 return response.json();
-        }).then(response => {
+            }).then(response => {
                 if (response.hasOwnProperty("Error")) {
-                alert(JSON.stringify(response));
-            } else {
-                console.log(response);
-                populateCategoriesDropdown(response);
-            }
-        });
+                    alert(JSON.stringify(response));
+                } else {
+                    console.log(response);
+                    populateCategoriesDropdown(response);
+                }
+            });
         }
-
 
         function populateCategoriesDropdown(response) {
             console.log("Invoked populateCategoriesDropdown() ");
@@ -56,11 +90,10 @@
             document.getElementById("ddlCategories").innerHTML = html;
 
         }
+        function postUpdateEvent() {
+            console.log("Invoked postUpdateEvent() ");
 
-        function postCreateEvent() {
-            console.log("Invoked postCreateEvent() ");
-
-            var url = "/event/add";
+            var url = "/event/update";
             var formData = new FormData(document.getElementById('eventForm'));
 
             fetch(url, {
@@ -72,30 +105,29 @@
                 if (response.hasOwnProperty("Error")) {
                     alert(JSON.stringify(response));
                 } else {
-                    alert("new event added");
+                    alert("event updated");
                     window.open("Calendar.html", "_self");
                 }
             });
         }
 
 
+
     </script>
 
 
-    <title>Create Event</title>
+    <title>Edit Event</title>
 
     <div class="vertical-menu">
         <a href="Home.html" >Entries</a>
-        <a href="Calendar.html" class="active">Calendar</a>
+        <a href="#" class="active">Calendar</a>
         <a href="Maps.html">Maps</a>
     </div>
 </head>
 <body onload="pageLoad()">
-<table id="eventTable">
 
-</table>
 
-<h2>Create Event</h2>
+<h2>Edit Event</h2>
 
 <div id ="username">
     <p>*username goes here*</p>
@@ -106,6 +138,7 @@
     <form id="eventForm">
         <p>Title:</p>
         <input type="text" name="title" id="title">
+
         <BR>
         <p>Date:</p>
         <input type="date" name="date" id="date">
@@ -126,8 +159,9 @@
 
 
     <BR>
-    <button class="button" onclick='postCreateEvent();'>CREATE</button>
+    <button class="button" onclick='postUpdateEvent();'>UPDATE</button>
 </div>
+
 
 </body>
 </html>

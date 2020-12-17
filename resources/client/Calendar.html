@@ -94,7 +94,11 @@
         }
 
         function editEvent(id) {
-            console.log("Invoked editEntry")
+            console.log("Invoked editEvent");
+            sessionStorage.setItem("eventID", id);
+            console.log(sessionStorage.getItem("eventID"));
+            window.open("editEvent.html", "_self");
+            console.log(id);
         }
 
     </script>
