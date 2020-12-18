@@ -91,15 +91,16 @@ public class Event {
 
     @POST
     @Path("update")
-    public String updateEntry(@FormDataParam("eventID") String eventID, @FormDataParam("title") String title, @FormDataParam("description") String description, @FormDataParam("location") String location, @FormDataParam("date") String date, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
+    public String updateEntry(@FormDataParam("eventID") int eventID, @FormDataParam("title") String title, @FormDataParam("description") String description, @FormDataParam("location") String location, @FormDataParam("date") String date, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
         try {
             System.out.println("Invoked Event.updateEvent/update id=" + eventID);
-            PreparedStatement ps = Main.db.prepareStatement("UPDATE Entries SET Title = ?, Description = ? , Location = ?, CategoryID =? , Date = ? WHERE EventID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Entries SET Title = ?, Description = ? , Location = ?, Date = ?, CategoryID =?  WHERE EventID = ?");
             ps.setString(1, title);
             ps.setString(2, description);
             ps.setString(3, location);
             ps.setString(4, date);
             ps.setInt(5, categoryID);
+            ps.setInt(6, eventID);
             ps.execute();
             return "{\"OK\": \"Event updated\"}";
         } catch (Exception exception) {

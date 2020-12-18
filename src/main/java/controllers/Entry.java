@@ -117,7 +117,7 @@ public class Entry {
 
     @POST
     @Path("update")
-    public String updateEntry(@FormDataParam("entryID") String entryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
+    public String updateEntry(@FormDataParam("entryID") int entryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
 
         try {
             System.out.println("Invoked Entry.updateEntry/update id=" + entryID);
@@ -126,6 +126,8 @@ public class Entry {
             ps.setString(2, date);
             ps.setString(3, content);
             ps.setInt(4, categoryID);
+            ps.setInt(5, entryID);
+
             ps.execute();
             return "{\"OK\": \"Entry updated\"}";
         } catch (Exception exception) {

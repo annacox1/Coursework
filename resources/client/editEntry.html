@@ -91,9 +91,10 @@
         }
         function postUpdateEntry() {
             console.log("Invoked postUpdateEntry() ");
-
+            let entryID = sessionStorage.getItem("entryID");
             var url = "/entry/update";
             var formData = new FormData(document.getElementById('entryForm'));
+            formData.append("entryID", entryID);
 
             fetch(url, {
                 method: "POST",

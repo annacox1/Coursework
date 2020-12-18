@@ -92,9 +92,11 @@
         }
         function postUpdateEvent() {
             console.log("Invoked postUpdateEvent() ");
+            let eventID = sessionStorage.getItem("eventID");
 
             var url = "/event/update";
             var formData = new FormData(document.getElementById('eventForm'));
+            formData.append("eventID", eventID);
 
             fetch(url, {
                 method: "POST",
