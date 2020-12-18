@@ -118,6 +118,7 @@ public class Entry {
     @POST
     @Path("update")
     public String updateEntry(@FormDataParam("entryID") String entryID, @FormDataParam("title") String title, @FormDataParam("date") String date, @FormDataParam("content") String content, @FormDataParam("ddlCategories") int categoryID, @CookieParam("token") Cookie cookie) {
+
         try {
             System.out.println("Invoked Entry.updateEntry/update id=" + entryID);
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Entries SET Title = ?, Date = ? , Content = ?, CategoryID =? WHERE EntryID = ?");
